@@ -283,6 +283,11 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <span id="headerSyncBadge" class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 text-[11px] font-extrabold text-emerald-700">
+                        <span id="headerSyncDot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="headerSyncText">متصل سحابياً</span>
+                    </span>
+
                     <span id="headerRoleBadge" class="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-extrabold text-emerald-700">
                         <i class="fa-solid fa-crown text-[11px]"></i>
                         <span>مدير عام</span>
@@ -473,7 +478,14 @@
 
         // 1. Firebase Setup with Graceful In-Memory Fallback
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'devnza-erp-system';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyBi2vxZKo1qxv92th5lQFJ7m_2V5U5y0jI",
+            authDomain: "devnza-erp.firebaseapp.com",
+            projectId: "devnza-erp",
+            storageBucket: "devnza-erp.firebasestorage.app",
+            messagingSenderId: "790619582605",
+            appId: "1:790619582605:web:2b2a76a24672cd656a32c4"
+        };
 
         let app = null, auth = null, db = null;
         let firebaseUser = null;
@@ -999,6 +1011,12 @@
         function initLocalFallback(seed) {
             document.getElementById('syncStatusText').textContent = 'وضع محلي (تجريبي)';
             document.getElementById('syncDot').className = 'h-1.5 w-1.5 rounded-full bg-amber-400';
+            const hText = document.getElementById('headerSyncText');
+            const hDot = document.getElementById('headerSyncDot');
+            const hBadge = document.getElementById('headerSyncBadge');
+            if (hText) hText.textContent = 'وضع محلي';
+            if (hDot) hDot.className = 'h-2 w-2 rounded-full bg-amber-500';
+            if (hBadge) hBadge.className = 'inline-flex items-center gap-1.5 rounded-xl bg-amber-50 border border-amber-200 px-2.5 py-1.5 text-[11px] font-extrabold text-amber-700';
             state.erp_users = [{ id: 'admin_default', ...seed.superAdmin }];
             ['accounting', 'invoices', 'crm', 'callcenter', 'marketing', 'hr', 'sales', 'crisis'].forEach(k => {
                 state[k] = seed[k].map((item, i) => ({ id: `${k}_${i}`, ...item }));
